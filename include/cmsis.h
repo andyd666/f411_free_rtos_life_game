@@ -10,7 +10,7 @@
 
 #include "stm32f4xx.h"
 
-#define CMSIS_USE_HSI 1
+#define CMSIS_USE_HSI 0
 
 #define PLLM_MAX 63
 #define PLLM_MIN 2

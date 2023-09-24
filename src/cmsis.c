@@ -50,7 +50,7 @@ void cmsis_set_sysclk_speed(uint32_t mhz) {
          * 1) f_vco = f_in / M * N;
          * 2) f_pll = f_vco / P; */
 
-        uint32_t pll_input_speed = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) ? HSE_VALUE : HSI_VALUE;
+        uint32_t pll_input_speed;
 
         if ((clk_src == CLOCK_SOURCE_PLL)
 #if !CMSIS_USE_HSI
@@ -60,6 +60,13 @@ void cmsis_set_sysclk_speed(uint32_t mhz) {
         ) {
             return;
         }
+
+#if CMSIS_USE_HSI
+        pll_input_speed = (RCC->PLLCFGR & RCC_PLLCFGR_PLLSRC) ? HSE_VALUE : HSI_VALUE;
+#else
+        pll_input_speed = HSE_VALUE;
+        RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC;
+#endif /*  */
 
         if ((m >= PLLM_MIN) && (m <= PLLM_MAX) &&
            ((pll_input_speed / m) >= 1000000) && ((pll_input_speed / m) <= 2000000) &&
