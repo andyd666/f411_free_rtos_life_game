@@ -9,7 +9,7 @@
 #include "game.h"
 
 
-static uint8_t life_field[GAME_FIELD_ARRAY_SIZE_X][GAME_FIELD_ARRAY_SIZE_Y];
+uint8_t life_field[GAME_FIELD_ARRAY_SIZE_X][GAME_FIELD_ARRAY_SIZE_Y];
 
 uint8_t game_get_cell(uint8_t x, uint8_t y) {
 	return !!(life_field[(x)>>3][(y)] & (1 << ((x) % 8)));
