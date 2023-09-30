@@ -14,9 +14,21 @@
 #define PLLM_MIN 2
 #define PLLN_MAX 432
 #define PLLN_MIN 50
+#define PLLP_MIN 2
+#define PLLP_MAX 8
 
-#define FVCO_MAX 432
-#define FVCO_MIN 100
+#define PLLM_DEFAULT 16
+#define PLLN_DEFAULT 192
+#define PLLP_DEFAULT 2
+
+
+#define FVCO_INPUT_MAX 2000000
+#define FVCO_INPUT_MIN 1000000
+#define FVCO_OUTPUT_MAX 432000000
+#define FVCO_OUTPUT_MIN 100000000
+#define FPLL_MAX 100000000
+
+#define ABS_DIFF(x, y) ((x) < (y) ? (y) - (x) : (x) - (y))
 
 typedef enum {
     CLOCK_SOURCE_HSI            = 0,
