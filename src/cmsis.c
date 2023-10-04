@@ -103,9 +103,26 @@ void cmsis_set_sysclk_speed(uint32_t mhz, CLOCK_SOURCE sysclk_src) {
             n = n_closest;
             p = p_closest;
         }
+        p = (p >> 1) - 1;
 
-        // TODO: start PLL
+        if (pll_input_speed == HSI_VALUE) {
+            /* HSI is always ON */
+            RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLSRC;
+        } else {
+            RCC->CR |= RCC_CR_HSEON;
+            while (!(RCC->CR & RCC_CR_HSERDY)) {}
+            RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC;
+        }
 
+        RCC->PLLCFGR &= ~(RCC_PLLCFGR_PLLM | RCC_PLLCFGR_PLLN | RCC_PLLCFGR_PLLP);
+        RCC->PLLCFGR |= (m << RCC_PLLCFGR_PLLM_Pos) & RCC_PLLCFGR_PLLM_Msk;
+        RCC->PLLCFGR |= (n << RCC_PLLCFGR_PLLN_Pos) & RCC_PLLCFGR_PLLN_Msk;
+        RCC->PLLCFGR |= (p << RCC_PLLCFGR_PLLP_Pos) & RCC_PLLCFGR_PLLP_Msk;
+
+        RCC->CR |= RCC_CR_PLLON;
+        while (!(RCC->CR & RCC_CR_PLLRDY)) {}
+        RCC->CFGR = (RCC->CFGR | RCC_CFGR_SW_1) & (~RCC_CFGR_SW_0);
+        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) {}
     }
 
     /* Switch to a needed clock */
